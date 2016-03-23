@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"net/http"
 
-	"github.com/whitepages/go-stingray"
+	"github.com/cwood/go-vtm"
 )
 
 // Config is the configuration structure used to instantiate the Stingray

@@ -7,7 +7,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
-	"github.com/whitepages/go-stingray"
+	"github.com/cwood/go-vtm"
 )
 
 // Provider returns a terraform.ResourceProvider.
@@ -59,6 +59,7 @@ func Provider() terraform.ResourceProvider {
 			"vtm_ssl_server_key":        resourceSSLServerKey(),
 			"vtm_traffic_ip_group":      resourceTrafficIPGroup(),
 			"vtm_virtual_server":        resourceVirtualServer(),
+			"vtm_protection":            resourceProtection(),
 		},
 
 		ConfigureFunc: providerConfigure,

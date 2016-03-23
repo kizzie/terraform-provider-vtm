@@ -5,7 +5,7 @@ import (
 
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/whitepages/go-stingray"
+	"github.com/cwood/go-vtm"
 )
 
 func resourceVirtualServer() *schema.Resource {
