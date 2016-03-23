@@ -54,7 +54,7 @@ fully supported.
 - [x] **Monitor Program**
 - [ ] NAT Configuration
 - [x] Pool
-- [ ] Protection Class
+- [x] Protection Class
 - [x] **Rate Shaping Class**
 - [x] **Rule**
 - [x] **SLM Class**
