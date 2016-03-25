@@ -5,9 +5,9 @@ import (
 	"encoding/hex"
 	"strings"
 
+	"github.com/cwood/go-vtm"
 	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/hashicorp/terraform/terraform"
-	"github.com/cwood/go-vtm"
 )
 
 // Provider returns a terraform.ResourceProvider.
@@ -46,6 +46,7 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
+			"vtm_action":                resourceAction(),
 			"vtm_action_program":        resourceActionProgram(),
 			"vtm_extra_file":            resourceExtraFile(),
 			"vtm_license_key":           resourceLicenseKey(),
@@ -116,6 +117,13 @@ func hashString(v interface{}) string {
 	default:
 		return ""
 	}
+}
+
+func nestSetHelper() (map[string]interface{}, []map[string]interface{}) {
+	list := make([]map[string]interface{}, 0, 1)
+	item := make(map[string]interface{})
+	appendList := append(list, item)
+	return item, appendList
 }
 
 func setBool(target **bool, d *schema.ResourceData, key string) {
