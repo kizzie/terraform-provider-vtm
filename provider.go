@@ -48,6 +48,7 @@ func Provider() terraform.ResourceProvider {
 		ResourcesMap: map[string]*schema.Resource{
 			"vtm_action":                resourceAction(),
 			"vtm_action_program":        resourceActionProgram(),
+			"vtm_event_type":            resourceEventType(),
 			"vtm_extra_file":            resourceExtraFile(),
 			"vtm_license_key":           resourceLicenseKey(),
 			"vtm_monitor_script":        resourceMonitorScript(),
