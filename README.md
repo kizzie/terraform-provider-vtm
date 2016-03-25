@@ -38,7 +38,7 @@ Support for resources is being added as needed. **Bold** resources are
 fully supported.
 
 - [x] **Action Program**
-- [ ] Alerting Action
+- [x] **Alerting Action**
 - [ ] Aptimizer Application Scope
 - [ ] Aptimizer Profile
 - [ ] Bandwidth Class
@@ -54,7 +54,7 @@ fully supported.
 - [x] **Monitor Program**
 - [ ] NAT Configuration
 - [x] Pool
-- [x] Protection Class
+- [x] **Protection Class**
 - [x] **Rate Shaping Class**
 - [x] **Rule**
 - [x] **SLM Class**
