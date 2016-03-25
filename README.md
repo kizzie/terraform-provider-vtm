@@ -44,7 +44,7 @@ fully supported.
 - [ ] Bandwidth Class
 - [ ] Cloud Credentials
 - [ ] Custom configuration set
-- [ ] Event Type
+- [X] **Event Type**
 - [x] **Extra File**
 - [ ] GLB Service
 - [ ] Global Settings
