@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/cwood/go-vtm"
+	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourcePool() *schema.Resource {
@@ -137,14 +137,33 @@ func resourcePool() *schema.Resource {
 				Default:  3,
 			},
 
-			"nodes": &schema.Schema{
+			"node": &schema.Schema{
 				Type:     schema.TypeSet,
 				Optional: true,
-				Computed: true,
-				Elem:     &schema.Schema{Type: schema.TypeString},
-				Set:      schema.HashString,
+				Elem: &schema.Resource{
+					Schema: map[string]*schema.Schema{
+						"node": &schema.Schema{
+							Type:     schema.TypeString,
+							Required: true,
+						},
+						"weight": &schema.Schema{
+							Type:     schema.TypeInt,
+							Optional: true,
+							Default:  1,
+						},
+						"state": &schema.Schema{
+							Type:     schema.TypeString,
+							Optional: true,
+							Default:  "active",
+						},
+						"priority": &schema.Schema{
+							Type:     schema.TypeInt,
+							Optional: true,
+							Default:  1,
+						},
+					},
+				},
 			},
-
 			"note": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
@@ -233,7 +252,6 @@ func resourcePoolRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("monitors", []string(*r.Basic.Monitors))
 	d.Set("node_close_with_rst", bool(*r.Basic.NodeCloseWithRST))
 	d.Set("node_connection_attempts", int(*r.Basic.NodeConnectionAttempts))
-	d.Set("nodes", nodesTableToNodes(*r.Basic.NodesTable))
 	d.Set("note", string(*r.Basic.Note))
 	d.Set("passive_monitoring", bool(*r.Basic.PassiveMonitoring))
 	d.Set("persistence_class", string(*r.Basic.PersistenceClass))
@@ -241,6 +259,17 @@ func resourcePoolRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("udp_accept_from", string(*r.UDP.AcceptFrom))
 	d.Set("udp_accept_from_mask_class", string(*r.UDP.AcceptFromMask))
 	d.Set("transparent", bool(*r.Basic.Transparent))
+
+	nodesList := make([]map[string]interface{}, 0, len(r.Basic.NodesTable))
+	for _, node := range r.Basic.NodesTable {
+		nodeTerraform := make(map[string]interface{})
+		nodeTerraform["node"] = string(*node.Node)
+		nodeTerraform["weight"] = int(*node.Weight)
+		nodeTerraform["priority"] = int(*node.Priority)
+		nodeTerraform["state"] = string(*node.State)
+		nodesList = append(nodesList, nodeTerraform)
+	}
+	d.Set("node", nodesList)
 
 	return nil
 }
@@ -289,7 +318,6 @@ func resourcePoolSet(d *schema.ResourceData, meta interface{}) error {
 	setStringSet(&r.Basic.Monitors, d, "monitors")
 	setBool(&r.Basic.NodeCloseWithRST, d, "node_close_with_rst")
 	setInt(&r.Basic.NodeConnectionAttempts, d, "node_connection_attempts")
-	setNodesTable(&r.Basic.NodesTable, d, "nodes")
 	setString(&r.Basic.Note, d, "note")
 	setBool(&r.Basic.PassiveMonitoring, d, "passive_monitoring")
 	setString(&r.Basic.PersistenceClass, d, "persistence_class")
@@ -297,6 +325,24 @@ func resourcePoolSet(d *schema.ResourceData, meta interface{}) error {
 	setBool(&r.Basic.Transparent, d, "transparent")
 	setString(&r.UDP.AcceptFrom, d, "udp_accept_from")
 	setString(&r.UDP.AcceptFromMask, d, "udp_accept_from_mask")
+
+	if v, ok := d.GetOk("node"); ok {
+		nodeList := v.(*schema.Set).List()
+
+		for _, node := range nodeList {
+			terraformNode := node.(map[string]interface{})
+
+			VtmNode := &stingray.Node{}
+			VtmNode.Node = stingray.String(terraformNode["node"].(string))
+			VtmNode.Weight = stingray.Int(terraformNode["weight"].(int))
+			VtmNode.Priority = stingray.Int(terraformNode["priority"].(int))
+			VtmNode.State = stingray.String(terraformNode["state"].(string))
+
+			r.Basic.NodesTable = append(r.Basic.NodesTable, *VtmNode)
+		}
+	} else {
+		r.Basic.NodesTable = make([]stingray.Node, 0, 0)
+	}
 
 	_, err := c.Set(r)
 	if err != nil {
@@ -306,43 +352,4 @@ func resourcePoolSet(d *schema.ResourceData, meta interface{}) error {
 	d.SetId(d.Get("name").(string))
 
 	return nil
-}
-
-func setNodesTable(target **stingray.NodesTable, d *schema.ResourceData, key string) {
-	if _, ok := d.GetOk(key); ok {
-		var nodes []string
-		if v := d.Get(key).(*schema.Set); v.Len() > 0 {
-			nodes = make([]string, v.Len())
-			for i, v := range v.List() {
-				nodes[i] = v.(string)
-			}
-		}
-		nodesTable := nodesToNodesTable(nodes)
-		*target = &nodesTable
-	}
-}
-
-func nodesToNodesTable(nodes []string) stingray.NodesTable {
-	t := []stingray.Node{}
-
-	for _, v := range nodes {
-		t = append(t, stingray.Node{Node: stingray.String(v)})
-	}
-
-	return t
-}
-
-func nodesTableToNodes(t []stingray.Node) []string {
-	nodes := []string{}
-
-	for _, v := range t {
-		// A node deleted from the web UI will still exist in
-		// the nodes_table, but state and weight will not
-		// exist
-		if v.State != nil {
-			nodes = append(nodes, *v.Node)
-		}
-	}
-
-	return nodes
 }
