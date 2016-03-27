@@ -248,6 +248,8 @@ func resourceActionSet(d *schema.ResourceData, meta interface{}) error {
 
 					r.Program.Arguments = append(r.Program.Arguments, *vtmArg)
 				}
+			} else {
+				r.Program.Arguments = make([]stingray.ProgramArgument, 0, 0)
 			}
 		}
 	}
