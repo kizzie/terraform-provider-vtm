@@ -185,6 +185,11 @@ func resourceVirtualServer() *schema.Resource {
 				Optional: true,
 				Default:  false,
 			},
+			"ssl_trust_magic": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
 
 			"ssl_decrypt": &schema.Schema{
 				Type:     schema.TypeBool,
@@ -317,6 +322,7 @@ func resourceVirtualServerRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("request_rules", []string(*r.Basic.RequestRules))
 	d.Set("response_rules", []string(*r.Basic.ResponseRules))
 	d.Set("ssl_add_http_headers", bool(*r.SSL.AddHTTPHeaders))
+	d.Set("ssl_trust_magic", bool(*r.SSL.TrustMagic))
 	d.Set("ssl_decrypt", bool(*r.Basic.SSLDecrypt))
 	d.Set("ssl_server_cert_default", string(*r.SSL.ServerCertDefault))
 	d.Set("ssl_server_cert_host_mapping", flattenServerCertHostMappingTable(*r.SSL.ServerCertHostMapping))
@@ -395,6 +401,7 @@ func resourceVirtualServerSet(d *schema.ResourceData, meta interface{}) error {
 	setStringList(&r.Basic.RequestRules, d, "request_rules")
 	setStringList(&r.Basic.ResponseRules, d, "response_rules")
 	setBool(&r.SSL.AddHTTPHeaders, d, "ssl_add_http_headers")
+	setBool(&r.SSL.TrustMagic, d, "ssl_trust_magic")
 	setBool(&r.Basic.SSLDecrypt, d, "ssl_decrypt")
 	setString(&r.SSL.ServerCertDefault, d, "ssl_server_cert_default")
 	setServerCertHostMappingTable(&r.SSL.ServerCertHostMapping, d, "ssl_server_cert_host_mapping")
