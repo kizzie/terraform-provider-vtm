@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
+	"github.com/cwood/go-vtm"
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/cwood/go-vtm"
 )
 
 func resourceVirtualServer() *schema.Resource {
@@ -138,6 +138,10 @@ func resourceVirtualServer() *schema.Resource {
 				Optional: true,
 				Default:  false,
 			},
+			"protection_class": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
 
 			"request_rules": &schema.Schema{
 				Type:     schema.TypeList,
@@ -235,6 +239,7 @@ func resourceVirtualServerRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("connection_errors_error_file", string(*r.ConnectionErrors.ErrorFile))
 	d.Set("connection_keepalive_timeout", int(*r.Connection.KeepaliveTimeout))
 	d.Set("connection_timeout", int(*r.Connection.Timeout))
+	d.Set("protection_class", string(*r.Basic.ProtectionClass))
 	d.Set("connect_timeout", int(*r.Basic.ConnectTimeout))
 	d.Set("enabled", bool(*r.Basic.Enabled))
 	d.Set("gzip_enabled", bool(*r.Gzip.Enabled))
@@ -294,6 +299,7 @@ func resourceVirtualServerSet(d *schema.ResourceData, meta interface{}) error {
 	setInt(&r.Connection.Timeout, d, "connection_timeout")
 	setInt(&r.Basic.ConnectTimeout, d, "connect_timeout")
 	setBool(&r.Basic.Enabled, d, "enabled")
+	setString(&r.Basic.ProtectionClass, d, "protection_class")
 	// NOTE: Set default for gzip_include_mime
 	//
 	// Default does not work for sets (only for primitive types),
