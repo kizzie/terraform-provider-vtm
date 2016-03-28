@@ -21,6 +21,16 @@ func resourceVirtualServer() *schema.Resource {
 				Required: true,
 				ForceNew: true,
 			},
+			"add_x_forwarded_for": &schema.Schema{
+				Type:     schema.TypeBool,
+				Default:  false,
+				Optional: true,
+			},
+			"add_x_forwarded_proto": &schema.Schema{
+				Type:     schema.TypeBool,
+				Default:  false,
+				Optional: true,
+			},
 
 			"connection_errors_error_file": &schema.Schema{
 				Type:     schema.TypeString,
@@ -57,6 +67,21 @@ func resourceVirtualServer() *schema.Resource {
 				Type:     schema.TypeBool,
 				Optional: true,
 				Default:  false,
+			},
+			"gzip_compress_level": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  1,
+			},
+			"gzip_max_size": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  10000000,
+			},
+			"gzip_min_size": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  1000,
 			},
 
 			"gzip_include_mime": &schema.Schema{
@@ -191,10 +216,24 @@ func resourceVirtualServer() *schema.Resource {
 				Set: hashServerCertHostMapping,
 			},
 
+			"syslog_enabled": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
 			"syslog_format": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
 				Default:  "%h %l %u %t \"%r\" %s %b \"%{Referer}i\" \"%{User-agent}i\"",
+			},
+			"syslog_ip_end_point": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"syslog_msg_len_limit": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  1024,
 			},
 
 			"web_cache_enabled": &schema.Schema{
@@ -207,6 +246,20 @@ func resourceVirtualServer() *schema.Resource {
 				Type:     schema.TypeInt,
 				Optional: true,
 				Default:  600,
+			},
+			"web_cache_refresh_time": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  2,
+			},
+			"web_cache_control_out": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+			},
+			"web_cache_error_page_time": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  30,
 			},
 		},
 	}
@@ -240,9 +293,14 @@ func resourceVirtualServerRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("connection_keepalive_timeout", int(*r.Connection.KeepaliveTimeout))
 	d.Set("connection_timeout", int(*r.Connection.Timeout))
 	d.Set("protection_class", string(*r.Basic.ProtectionClass))
+	d.Set("add_x_forwarded_for", bool(*r.Basic.AddXForwardedFor))
+	d.Set("add_x_forwarded_proto", bool(*r.Basic.AddXForwardedProto))
 	d.Set("connect_timeout", int(*r.Basic.ConnectTimeout))
 	d.Set("enabled", bool(*r.Basic.Enabled))
 	d.Set("gzip_enabled", bool(*r.Gzip.Enabled))
+	d.Set("gzip_compress_level", int(*r.Gzip.CompressLevel))
+	d.Set("gzip_max_size", int(*r.Gzip.MaxSize))
+	d.Set("gzip_min_size", int(*r.Gzip.MinSize))
 	d.Set("gzip_include_mime", []string(*r.Gzip.IncludeMIME))
 	d.Set("http_location_rewrite", string(*r.HTTP.LocationRewrite))
 	d.Set("listen_on_any", bool(*r.Basic.ListenOnAny))
@@ -262,9 +320,15 @@ func resourceVirtualServerRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("ssl_decrypt", bool(*r.Basic.SSLDecrypt))
 	d.Set("ssl_server_cert_default", string(*r.SSL.ServerCertDefault))
 	d.Set("ssl_server_cert_host_mapping", flattenServerCertHostMappingTable(*r.SSL.ServerCertHostMapping))
+	d.Set("syslog_enabled", bool(*r.Syslog.Enabled))
 	d.Set("syslog_format", string(*r.Syslog.Format))
+	d.Set("syslog_ip_end_point", string(*r.Syslog.IPEndPoint))
+	d.Set("syslog_msg_len_limit", int(*r.Syslog.MsgLenLimit))
 	d.Set("web_cache_enabled", bool(*r.WebCache.Enabled))
 	d.Set("web_cache_max_time", int(*r.WebCache.MaxTime))
+	d.Set("web_cache_refresh_time", int(*r.WebCache.RefreshTime))
+	d.Set("web_cache_control_out", string(*r.WebCache.ControlOut))
+	d.Set("web_cache_error_page_time", int(*r.WebCache.ErrorPageTime))
 
 	return nil
 }
@@ -300,6 +364,8 @@ func resourceVirtualServerSet(d *schema.ResourceData, meta interface{}) error {
 	setInt(&r.Basic.ConnectTimeout, d, "connect_timeout")
 	setBool(&r.Basic.Enabled, d, "enabled")
 	setString(&r.Basic.ProtectionClass, d, "protection_class")
+	setBool(&r.Basic.AddXForwardedFor, d, "add_x_forwarded_for")
+	setBool(&r.Basic.AddXForwardedProto, d, "add_x_forwarded_proto")
 	// NOTE: Set default for gzip_include_mime
 	//
 	// Default does not work for sets (only for primitive types),
@@ -311,6 +377,9 @@ func resourceVirtualServerSet(d *schema.ResourceData, meta interface{}) error {
 		r.Gzip.IncludeMIME = &[]string{"text/html", "text/plain"}
 	}
 	setBool(&r.Gzip.Enabled, d, "gzip_enabled")
+	setInt(&r.Gzip.CompressLevel, d, "gzip_compress_level")
+	setInt(&r.Gzip.MaxSize, d, "gzip_max_size")
+	setInt(&r.Gzip.MinSize, d, "gzip_min_size")
 	setString(&r.HTTP.LocationRewrite, d, "http_location_rewrite")
 	setBool(&r.Basic.ListenOnAny, d, "listen_on_any")
 	setStringSet(&r.Basic.ListenOnTrafficIPs, d, "listen_on_traffic_ips")
@@ -329,9 +398,15 @@ func resourceVirtualServerSet(d *schema.ResourceData, meta interface{}) error {
 	setBool(&r.Basic.SSLDecrypt, d, "ssl_decrypt")
 	setString(&r.SSL.ServerCertDefault, d, "ssl_server_cert_default")
 	setServerCertHostMappingTable(&r.SSL.ServerCertHostMapping, d, "ssl_server_cert_host_mapping")
+	setBool(&r.Syslog.Enabled, d, "syslog_enabled")
 	setString(&r.Syslog.Format, d, "syslog_format")
+	setString(&r.Syslog.IPEndPoint, d, "syslog_ip_end_point")
+	setInt(&r.Syslog.MsgLenLimit, d, "syslog_msg_len_limit")
 	setBool(&r.WebCache.Enabled, d, "web_cache_enabled")
 	setInt(&r.WebCache.MaxTime, d, "web_cache_max_time")
+	setInt(&r.WebCache.ErrorPageTime, d, "web_cache_error_page_time")
+	setInt(&r.WebCache.RefreshTime, d, "web_cache_refresh_time")
+	setString(&r.WebCache.ControlOut, d, "web_cache_control_out")
 
 	_, err := c.Set(r)
 	if err != nil {
