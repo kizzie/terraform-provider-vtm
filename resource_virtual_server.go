@@ -179,6 +179,11 @@ func resourceVirtualServer() *schema.Resource {
 				Optional: true,
 				Elem:     &schema.Schema{Type: schema.TypeString},
 			},
+			"completion_rules": &schema.Schema{
+				Type:     schema.TypeList,
+				Optional: true,
+				Elem:     &schema.Schema{Type: schema.TypeString},
+			},
 
 			"ssl_add_http_headers": &schema.Schema{
 				Type:     schema.TypeBool,
@@ -321,6 +326,7 @@ func resourceVirtualServerRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("recent_connections_save_all", bool(*r.RecentConnections.SaveAll))
 	d.Set("request_rules", []string(*r.Basic.RequestRules))
 	d.Set("response_rules", []string(*r.Basic.ResponseRules))
+	d.Set("completion_rules", []string(*r.Basic.CompletionRules))
 	d.Set("ssl_add_http_headers", bool(*r.SSL.AddHTTPHeaders))
 	d.Set("ssl_trust_magic", bool(*r.SSL.TrustMagic))
 	d.Set("ssl_decrypt", bool(*r.Basic.SSLDecrypt))
@@ -400,6 +406,7 @@ func resourceVirtualServerSet(d *schema.ResourceData, meta interface{}) error {
 	setBool(&r.RecentConnections.SaveAll, d, "recent_connections_save_all")
 	setStringList(&r.Basic.RequestRules, d, "request_rules")
 	setStringList(&r.Basic.ResponseRules, d, "response_rules")
+	setStringList(&r.Basic.CompletionRules, d, "completion_rules")
 	setBool(&r.SSL.AddHTTPHeaders, d, "ssl_add_http_headers")
 	setBool(&r.SSL.TrustMagic, d, "ssl_trust_magic")
 	setBool(&r.Basic.SSLDecrypt, d, "ssl_decrypt")
