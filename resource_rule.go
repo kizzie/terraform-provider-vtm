@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/cwood/go-vtm"
+	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceRule() *schema.Resource {
@@ -15,16 +15,20 @@ func resourceRule() *schema.Resource {
 		Delete: resourceRuleDelete,
 
 		Schema: map[string]*schema.Schema{
+			"name": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+				ForceNew: true,
+			},
 			"content": &schema.Schema{
 				Type:      schema.TypeString,
 				Required:  true,
 				StateFunc: hashString,
 			},
-
-			"name": &schema.Schema{
+			"note": &schema.Schema{
 				Type:     schema.TypeString,
-				Required: true,
-				ForceNew: true,
+				Optional: true,
+				Default:  "",
 			},
 		},
 	}
@@ -55,6 +59,7 @@ func resourceRuleRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	d.Set("content", hashString(string(r.Content)))
+	d.Set("note", r.Note)
 
 	return nil
 }
@@ -85,6 +90,7 @@ func resourceRuleSet(d *schema.ResourceData, meta interface{}) error {
 	r := stingray.NewRule(d.Get("name").(string))
 
 	r.Content = []byte(d.Get("content").(string))
+	r.Note = d.Get("note").(string)
 
 	_, err := c.Set(r)
 	if err != nil {
