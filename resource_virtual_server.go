@@ -3,7 +3,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/cwood/go-vtm"
+	"github.com/atlassian/go-vtm"
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
 )

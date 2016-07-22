@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/cwood/go-vtm"
+	"github.com/atlassian/go-vtm"
 )
 
 func resourceMonitorScript() *schema.Resource {
