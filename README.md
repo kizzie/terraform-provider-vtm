@@ -1,7 +1,7 @@
 # VTM Terraform Provider
 
-[![GoDoc](https://godoc.org/github.com/whitepages/terraform-provider-vtm?status.svg)](https://godoc.org/github.com/whitepages/terraform-provider-VTM)
-[![Build Status](https://secure.travis-ci.org/whitepages/terraform-provider-vtm.png)](http://travis-ci.org/whitepages/terraform-provider-VTM)
+[![GoDoc](https://godoc.org/github.com/atlassian/terraform-provider-vtm?status.svg)](https://godoc.org/github.com/atlassian/terraform-provider-VTM)
+[![Build Status](https://secure.travis-ci.org/atlassian/terraform-provider-vtm.png)](http://travis-ci.org/atlassian/terraform-provider-VTM)
 
 The VTM Terraform provider is used to interact with the VTM
 load balancer.
@@ -81,6 +81,4 @@ with the following exceptions:
 
 ## Building
 
-Dependencies are vendored (using `godep save -r`). Running `go
-install` will build and install the `terraform-provider-vtm`
-binary.
+Install glide and then do glide install and then you should be able to do `go build -o terraform-provider-vtm`
