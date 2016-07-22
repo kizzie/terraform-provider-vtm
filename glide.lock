@@ -1,5 +1,5 @@
-hash: 47e9d161e8fee2f6421d802a9d505481e872d7cd11e12b1ca3606b3d63f37721
-updated: 2016-07-22T11:29:16.537562544-07:00
+hash: 3c3ee4623f49eda19e510b23a60643bd11f95fc0f4567e932c4ef1f957f59cb7
+updated: 2016-07-22T11:47:18.777157033-07:00
 imports:
 - name: github.com/apparentlymart/go-cidr
   version: a3ebdb999b831ecb6ab8a226e31b07b2b9061c47
@@ -8,89 +8,120 @@ imports:
 - name: github.com/atlassian/go-vtm
   version: 2ce113db9d38efcb7286689adae846d5c4fa3eba
 - name: github.com/aws/aws-sdk-go
-  version: 5fbcfa00ec930ccaa641b404adece72bf96e3667
+  version: 2cc71659118a868dc7544a7ef0808eb42d487011
   subpackages:
   - aws
-  - aws/credentials
-  - aws/credentials/ec2rolecreds
-  - aws/ec2metadata
-  - aws/session
-  - service/s3
   - aws/awserr
+  - aws/awsutil
   - aws/client
   - aws/client/metadata
-  - aws/request
   - aws/corehandlers
+  - aws/credentials
+  - aws/credentials/ec2rolecreds
   - aws/defaults
+  - aws/ec2metadata
+  - aws/request
+  - aws/session
   - private/endpoints
-  - aws/awsutil
-  - aws/signer/v4
   - private/protocol
-  - private/protocol/restxml
-  - private/waiter
-  - aws/credentials/endpointcreds
-  - private/protocol/rest
+  - private/protocol/ec2query
+  - private/protocol/json/jsonutil
+  - private/protocol/jsonrpc
   - private/protocol/query
-  - private/protocol/xml/xmlutil
   - private/protocol/query/queryutil
-- name: github.com/atlassian/go-vtm
-  version: 1b6c0c60af12825eff48febe2888490f3283fb16
+  - private/protocol/rest
+  - private/protocol/restjson
+  - private/protocol/restxml
+  - private/protocol/xml/xmlutil
+  - private/signer/v4
+  - private/waiter
+  - service/apigateway
+  - service/autoscaling
+  - service/cloudformation
+  - service/cloudfront
+  - service/cloudtrail
+  - service/cloudwatch
+  - service/cloudwatchevents
+  - service/cloudwatchlogs
+  - service/codecommit
+  - service/codedeploy
+  - service/directoryservice
+  - service/dynamodb
+  - service/ec2
+  - service/ecr
+  - service/ecs
+  - service/efs
+  - service/elasticache
+  - service/elasticbeanstalk
+  - service/elasticsearchservice
+  - service/elb
+  - service/emr
+  - service/firehose
+  - service/glacier
+  - service/iam
+  - service/kinesis
+  - service/kms
+  - service/lambda
+  - service/opsworks
+  - service/rds
+  - service/redshift
+  - service/route53
+  - service/s3
+  - service/sns
+  - service/sqs
+  - service/sts
 - name: github.com/go-ini/ini
-  version: cf53f9204df4fbdd7ec4164b57fa6184ba168292
+  version: afbd495e5aaea13597b5e14fe514ddeaa4d76fc3
 - name: github.com/hashicorp/errwrap
   version: 7554cd9344cec97297fa6649b055a8c98c2a1e55
 - name: github.com/hashicorp/go-getter
-  version: 3d6040e1c4b972f6634c5aafb08901f916c5ee3c
+  version: 2822987a64e0df1236ac29dd277ddf79f4871f9a
   subpackages:
   - helper/url
 - name: github.com/hashicorp/go-multierror
   version: d30f09973e19c1dfcd120b2d9c4f168e68d6b5d5
-- name: github.com/hashicorp/go-plugin
-  version: 8cf118f7a2f0c7ef1c82f66d4f6ac77c7e27dc12
 - name: github.com/hashicorp/go-uuid
-  version: 64130c7a86d732268a38cb04cfbaf0cc987fda98
-- name: github.com/hashicorp/go-version
-  version: 0181db47023708a38c2d20d2fe25a5fa034d5743
+  version: 36289988d83ca270bc07c234c36f364b0dd9c9a7
 - name: github.com/hashicorp/hcl
-  version: d8c773c4cba11b11539e3d45f93daeaa5dcf1fa1
+  version: 9a905a34e6280ce905da1a32344b25e81011197a
   subpackages:
   - hcl/ast
+  - hcl/fmtcmd
   - hcl/parser
-  - hcl/token
-  - json/parser
+  - hcl/printer
   - hcl/scanner
   - hcl/strconv
+  - hcl/token
+  - json/parser
   - json/scanner
   - json/token
 - name: github.com/hashicorp/hil
-  version: 1e86c6b523c55d1fa6c6e930ce80b548664c95c2
+  version: 0640fefa3817883b16b77bf760c4c3a6f2589545
   subpackages:
   - ast
 - name: github.com/hashicorp/terraform
-  version: 3f4857a07a24f3c9e2db6b4458fbf5be19a8b256
+  version: 6e586c89394f5474b6c5f3217a4a75ce80c3fd6c
   subpackages:
   - helper/hashcode
   - helper/schema
   - plugin
   - terraform
+  - rpc
   - config
   - config/module
   - dag
   - dot
   - flatmap
-  - helper/hilmapstructure
 - name: github.com/hashicorp/yamux
-  version: d1caa6c97c9fc1cc9e83bbe34d0603f9ff0ce8bd
+  version: df949784da9ed028ee76df44652e42d37a09d7e4
 - name: github.com/jmespath/go-jmespath
-  version: 0b12d6b521d83fc7f755e7cfc1b1fbdd35a01a74
+  version: c01cf91b011868172fdcd9f41838e80c9d716264
 - name: github.com/mitchellh/copystructure
-  version: ae8f8315ad044b86ced2e0be9e3598e9dd94f38e
+  version: 80adcec1955ee4e97af357c30dee61aadcc02c10
 - name: github.com/mitchellh/go-homedir
-  version: 756f7b183b7ab78acdbbee5c7f392838ed459dda
+  version: d682a8f0cf139663a984ff12528da460ca963de9
 - name: github.com/mitchellh/mapstructure
-  version: 21a35fb16463dfb7c8eee579c65d995d95e64d1e
+  version: 281073eb9eb092240d33ef253c404f1cca550309
 - name: github.com/mitchellh/reflectwalk
   version: eecf4c70c626c7cfbb95c90195bc34d386c74ac6
-- name: github.com/satori/go.uuid
-  version: 0aa62d5ddceb50dbcb909d790b5345affd3669b6
 testImports: []
