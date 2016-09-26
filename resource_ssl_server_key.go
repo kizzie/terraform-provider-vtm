@@ -37,6 +37,7 @@ func resourceSSLServerKey() *schema.Resource {
 				Optional:         true,
 				Computed:         true,
 				DiffSuppressFunc: diffCurrentAndRemoteSSLKey,
+				Sensitive:        true,
 			},
 
 			"public": &schema.Schema{
