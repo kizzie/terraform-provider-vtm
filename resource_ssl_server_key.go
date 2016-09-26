@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/atlassian/go-vtm"
+	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceSSLServerKey() *schema.Resource {
@@ -13,6 +13,9 @@ func resourceSSLServerKey() *schema.Resource {
 		Read:   resourceSSLServerKeyRead,
 		Update: resourceSSLServerKeyUpdate,
 		Delete: resourceSSLServerKeyDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{

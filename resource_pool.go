@@ -13,6 +13,9 @@ func resourcePool() *schema.Resource {
 		Read:   resourcePoolRead,
 		Update: resourcePoolUpdate,
 		Delete: resourcePoolDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{

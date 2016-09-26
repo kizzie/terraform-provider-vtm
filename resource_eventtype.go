@@ -20,6 +20,9 @@ func resourceEventType() *schema.Resource {
 		Read:   resourceEventTypeRead,
 		Update: resourceEventTypeUpdate,
 		Delete: resourceEventTypeDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{

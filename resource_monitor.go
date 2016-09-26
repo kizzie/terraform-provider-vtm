@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 
+	"github.com/atlassian/go-vtm"
 	"github.com/hashicorp/terraform/helper/hashcode"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/atlassian/go-vtm"
 )
 
 func resourceMonitor() *schema.Resource {
@@ -14,6 +14,9 @@ func resourceMonitor() *schema.Resource {
 		Read:   resourceMonitorRead,
 		Update: resourceMonitorUpdate,
 		Delete: resourceMonitorDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{

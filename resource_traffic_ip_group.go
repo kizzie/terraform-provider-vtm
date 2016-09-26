@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/atlassian/go-vtm"
+	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceTrafficIPGroup() *schema.Resource {
@@ -14,6 +14,9 @@ func resourceTrafficIPGroup() *schema.Resource {
 		Read:   resourceTrafficIPGroupRead,
 		Update: resourceTrafficIPGroupUpdate,
 		Delete: resourceTrafficIPGroupDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{

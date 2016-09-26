@@ -12,6 +12,9 @@ func resourceProtection() *schema.Resource {
 		Read:   resourceProtectionRead,
 		Update: resourceProtectionUpdate,
 		Delete: resourceProtectionDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{

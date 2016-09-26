@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/atlassian/go-vtm"
+	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceSSLCAs() *schema.Resource {
@@ -13,6 +13,9 @@ func resourceSSLCAs() *schema.Resource {
 		Read:   resourceSSLCAsRead,
 		Update: resourceSSLCAsUpdate,
 		Delete: resourceSSLCAsDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"content": &schema.Schema{

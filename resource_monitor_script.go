@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/hashicorp/terraform/helper/schema"
 	"github.com/atlassian/go-vtm"
+	"github.com/hashicorp/terraform/helper/schema"
 )
 
 func resourceMonitorScript() *schema.Resource {
@@ -13,6 +13,9 @@ func resourceMonitorScript() *schema.Resource {
 		Read:   resourceMonitorScriptRead,
 		Update: resourceMonitorScriptUpdate,
 		Delete: resourceMonitorScriptDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"content": &schema.Schema{
