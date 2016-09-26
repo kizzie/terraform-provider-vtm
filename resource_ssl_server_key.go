@@ -1,10 +1,12 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/base64"
 	"fmt"
-
 	"github.com/atlassian/go-vtm"
 	"github.com/hashicorp/terraform/helper/schema"
+	"log"
 )
 
 func resourceSSLServerKey() *schema.Resource {
@@ -31,10 +33,10 @@ func resourceSSLServerKey() *schema.Resource {
 			},
 
 			"private": &schema.Schema{
-				Type:      schema.TypeString,
-				Optional:  true,
-				Computed:  true,
-				Sensitive: true,
+				Type:             schema.TypeString,
+				Optional:         true,
+				Computed:         true,
+				DiffSuppressFunc: diffCurrentAndRemoteSSLKey,
 			},
 
 			"public": &schema.Schema{
@@ -50,6 +52,13 @@ func resourceSSLServerKey() *schema.Resource {
 			},
 		},
 	}
+}
+
+func diffCurrentAndRemoteSSLKey(k, old, new string, d *schema.ResourceData) bool {
+	shaOfContent := sha256.Sum256([]byte(new))
+	base64Content := base64.StdEncoding.EncodeToString(shaOfContent[:])
+	log.Printf("[DEBUG] [%s] %s == %s is %s", d.Id(), base64Content, old, base64Content == old)
+	return base64Content == old
 }
 
 func resourceSSLServerKeyCreate(d *schema.ResourceData, meta interface{}) error {
