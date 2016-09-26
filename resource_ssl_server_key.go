@@ -31,9 +31,10 @@ func resourceSSLServerKey() *schema.Resource {
 			},
 
 			"private": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:      schema.TypeString,
+				Optional:  true,
+				Computed:  true,
+				Sensitive: true,
 			},
 
 			"public": &schema.Schema{
