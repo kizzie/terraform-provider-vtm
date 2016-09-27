@@ -37,7 +37,6 @@ func resourceSSLServerKey() *schema.Resource {
 				Optional:         true,
 				Computed:         true,
 				DiffSuppressFunc: diffCurrentAndRemoteSSLKey,
-				Sensitive:        true,
 			},
 
 			"public": &schema.Schema{
@@ -74,7 +73,7 @@ func resourceSSLServerKeyCreate(d *schema.ResourceData, meta interface{}) error 
 func resourceSSLServerKeyRead(d *schema.ResourceData, meta interface{}) error {
 	c := meta.(*providerConfig).client
 
-	r, resp, err := c.GetSSLServerKey(d.Get("name").(string))
+	r, resp, err := c.GetSSLServerKey(d.Id())
 	if err != nil {
 		if resp != nil && resp.StatusCode == 404 {
 			// The resource doesn't exist anymore
@@ -84,6 +83,10 @@ func resourceSSLServerKeyRead(d *schema.ResourceData, meta interface{}) error {
 		}
 
 		return fmt.Errorf("Error reading resource: %s", err)
+	}
+
+	if d.Get("name") == nil {
+		d.Set("name", d.Id())
 	}
 
 	d.Set("note", string(*r.Basic.Note))
