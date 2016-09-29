@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-
 	"github.com/atlassian/go-vtm"
 	"github.com/hashicorp/terraform/helper/schema"
+	"log"
 )
 
 func resourceRule() *schema.Resource {
@@ -24,9 +24,9 @@ func resourceRule() *schema.Resource {
 				ForceNew: true,
 			},
 			"content": &schema.Schema{
-				Type:      schema.TypeString,
-				Required:  true,
-				StateFunc: hashString,
+				Type:             schema.TypeString,
+				Required:         true,
+				DiffSuppressFunc: compareWithNoteContent,
 			},
 			"note": &schema.Schema{
 				Type:     schema.TypeString,
@@ -35,6 +35,12 @@ func resourceRule() *schema.Resource {
 			},
 		},
 	}
+}
+
+func compareWithNoteContent(k, old, new string, d *schema.ResourceData) bool {
+	newContent := fmt.Sprintf("#=-%v\n", d.Get("note")) + string(new)
+	log.Printf(old, newContent)
+	return hashString(old) == hashString(newContent)
 }
 
 func resourceRuleCreate(d *schema.ResourceData, meta interface{}) error {
@@ -61,8 +67,8 @@ func resourceRuleRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading resource: %s", err)
 	}
 
-	d.Set("content", hashString(string(r.Content)))
-	d.Set("note", r.Note)
+	d.Set("content", r.String())
+	d.Set("note", r.GetNote())
 
 	return nil
 }
