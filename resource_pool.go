@@ -140,6 +140,18 @@ func resourcePool() *schema.Resource {
 				Default:  3,
 			},
 
+			"node_delete_behavior": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Default:  "immediate",
+			},
+
+			"node_drain_to_delete_timeout": &schema.Schema{
+				Type:     schema.TypeInt,
+				Optional: true,
+				Default:  0,
+			},
+
 			"node": &schema.Schema{
 				Type:     schema.TypeSet,
 				Optional: true,
@@ -255,6 +267,8 @@ func resourcePoolRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("monitors", []string(*r.Basic.Monitors))
 	d.Set("node_close_with_rst", bool(*r.Basic.NodeCloseWithRST))
 	d.Set("node_connection_attempts", int(*r.Basic.NodeConnectionAttempts))
+	d.Set("node_delete_behavior", string(*r.Basic.NodeDeleteBehavior))
+	d.Set("node_drain_to_delete_timeout", int(*r.Basic.NodeDrainToDeleteTimeout))
 	d.Set("note", string(*r.Basic.Note))
 	d.Set("passive_monitoring", bool(*r.Basic.PassiveMonitoring))
 	d.Set("persistence_class", string(*r.Basic.PersistenceClass))
@@ -321,6 +335,8 @@ func resourcePoolSet(d *schema.ResourceData, meta interface{}) error {
 	setStringSet(&r.Basic.Monitors, d, "monitors")
 	setBool(&r.Basic.NodeCloseWithRST, d, "node_close_with_rst")
 	setInt(&r.Basic.NodeConnectionAttempts, d, "node_connection_attempts")
+	setString(&r.Basic.NodeDeleteBehavior, d, "node_delete_behavior")
+	setInt(&r.Basic.NodeDrainToDeleteTimeout, d, "node_drain_to_delete_timeout")
 	setString(&r.Basic.Note, d, "note")
 	setBool(&r.Basic.PassiveMonitoring, d, "passive_monitoring")
 	setString(&r.Basic.PersistenceClass, d, "persistence_class")
