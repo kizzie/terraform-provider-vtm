@@ -280,10 +280,18 @@ func resourcePoolRead(d *schema.ResourceData, meta interface{}) error {
 	nodesList := make([]map[string]interface{}, 0, len(r.Basic.NodesTable))
 	for _, node := range r.Basic.NodesTable {
 		nodeTerraform := make(map[string]interface{})
-		nodeTerraform["node"] = string(*node.Node)
-		nodeTerraform["weight"] = int(*node.Weight)
-		nodeTerraform["priority"] = int(*node.Priority)
-		nodeTerraform["state"] = string(*node.State)
+		if node.Node != nil {
+			nodeTerraform["node"] = string(*node.Node)
+		}
+		if node.Weight != nil {
+			nodeTerraform["weight"] = int(*node.Weight)
+		}
+		if node.State != nil {
+			nodeTerraform["state"] = string(*node.State)
+		}
+		if node.Priority != nil {
+			nodeTerraform["priority"] = int(*node.Priority)
+		}
 		nodesList = append(nodesList, nodeTerraform)
 	}
 	d.Set("node", nodesList)
@@ -305,11 +313,7 @@ func resourcePoolDelete(d *schema.ResourceData, meta interface{}) error {
 	r := stingray.NewPool(d.Id())
 
 	_, err := c.Delete(r)
-	if err != nil {
-		return err
-	}
-
-	return nil
+	return err
 }
 
 func resourcePoolSet(d *schema.ResourceData, meta interface{}) error {

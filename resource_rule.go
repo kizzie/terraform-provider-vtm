@@ -38,7 +38,14 @@ func resourceRule() *schema.Resource {
 }
 
 func compareWithNoteContent(k, old, new string, d *schema.ResourceData) bool {
-	newContent := fmt.Sprintf("#=-%v\n", d.Get("note")) + string(new)
+	var newContent string
+
+	if d.Get("note") != "" {
+		newContent = fmt.Sprintf("#=-%v\n", d.Get("note")) + string(new)
+	} else {
+		newContent = string(new)
+	}
+
 	log.Printf(old, newContent)
 	return hashString(old) == hashString(newContent)
 }

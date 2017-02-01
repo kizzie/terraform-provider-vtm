@@ -1,12 +1,12 @@
-hash: c37cb000fbc5e2e2c8fc99274551cd3b5477158f595a5845badb413bd059cbf4
-updated: 2016-09-22T13:48:30.356638918-07:00
+hash: b10e3bece09446120e485a78b13434c302dbacb1e2cbf8fd0c409ae5710f4ead
+updated: 2017-01-19T11:07:35.614891148-08:00
 imports:
 - name: github.com/apparentlymart/go-cidr
   version: a3ebdb999b831ecb6ab8a226e31b07b2b9061c47
   subpackages:
   - cidr
 - name: github.com/atlassian/go-vtm
-  version: 2ce113db9d38efcb7286689adae846d5c4fa3eba
+  version: 1b9ea643ef5418c9ab1b1da3f763a501339c4716
 - name: github.com/aws/aws-sdk-go
   version: 2cc71659118a868dc7544a7ef0808eb42d487011
   subpackages:
@@ -47,7 +47,7 @@ imports:
 - name: github.com/hashicorp/go-uuid
   version: 36289988d83ca270bc07c234c36f364b0dd9c9a7
 - name: github.com/hashicorp/go-version
-  version: deeb027c13a95d56c7585df3fe29207208c6706e
+  version: e96d3840402619007766590ecea8dd7af1292276
 - name: github.com/hashicorp/hcl
   version: 9a905a34e6280ce905da1a32344b25e81011197a
   subpackages:
@@ -64,16 +64,17 @@ imports:
   subpackages:
   - ast
 - name: github.com/hashicorp/terraform
-  version: 84592f5967490d118aae0b61a25d589d269fd0b6
+  version: dd2c6da4f6226b5ccd0601a15bba197fc223b1ec
   subpackages:
   - config
   - config/module
   - dag
-  - dot
   - flatmap
+  - helper/experiment
   - helper/hashcode
   - helper/hilmapstructure
   - helper/schema
+  - helper/shadow
   - plugin
   - terraform
 - name: github.com/hashicorp/yamux
@@ -89,5 +90,5 @@ imports:
 - name: github.com/mitchellh/reflectwalk
   version: eecf4c70c626c7cfbb95c90195bc34d386c74ac6
 - name: github.com/satori/go.uuid
-  version: 0aa62d5ddceb50dbcb909d790b5345affd3669b6
+  version: b061729afc07e77a8aa4fad0a2fd840958f1942a
 testImports: []
