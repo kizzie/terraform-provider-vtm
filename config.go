@@ -16,6 +16,7 @@ type Config struct {
 	VerifySSL bool
 }
 
+//Client returns back a new client for the provider to use
 func (c *Config) Client() (*stingray.Client, error) {
 	client := newClient(c)
 

@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/atlassian/go-vtm"
 	"github.com/hashicorp/terraform/helper/schema"
-	"log"
 )
 
 func resourceRule() *schema.Resource {
@@ -24,30 +23,11 @@ func resourceRule() *schema.Resource {
 				ForceNew: true,
 			},
 			"content": &schema.Schema{
-				Type:             schema.TypeString,
-				Required:         true,
-				DiffSuppressFunc: compareWithNoteContent,
-			},
-			"note": &schema.Schema{
 				Type:     schema.TypeString,
-				Optional: true,
-				Default:  "",
+				Required: true,
 			},
 		},
 	}
-}
-
-func compareWithNoteContent(k, old, new string, d *schema.ResourceData) bool {
-	var newContent string
-
-	if d.Get("note") != "" {
-		newContent = fmt.Sprintf("#=-%v\n", d.Get("note")) + string(new)
-	} else {
-		newContent = string(new)
-	}
-
-	log.Printf(old, newContent)
-	return hashString(old) == hashString(newContent)
 }
 
 func resourceRuleCreate(d *schema.ResourceData, meta interface{}) error {
@@ -75,7 +55,6 @@ func resourceRuleRead(d *schema.ResourceData, meta interface{}) error {
 	}
 
 	d.Set("content", r.String())
-	d.Set("note", r.GetNote())
 
 	return nil
 }
@@ -106,7 +85,6 @@ func resourceRuleSet(d *schema.ResourceData, meta interface{}) error {
 	r := stingray.NewRule(d.Get("name").(string))
 
 	r.Content = []byte(d.Get("content").(string))
-	r.Note = d.Get("note").(string)
 
 	_, err := c.Set(r)
 	if err != nil {
