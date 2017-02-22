@@ -1,14 +1,14 @@
 hash: b10e3bece09446120e485a78b13434c302dbacb1e2cbf8fd0c409ae5710f4ead
-updated: 2017-02-22T13:22:40.212251643-08:00
+updated: 2017-02-22T14:00:15.299471393-08:00
 imports:
 - name: github.com/apparentlymart/go-cidr
   version: a3ebdb999b831ecb6ab8a226e31b07b2b9061c47
   subpackages:
   - cidr
 - name: github.com/atlassian/go-vtm
-  version: 1b9ea643ef5418c9ab1b1da3f763a501339c4716
+  version: 1851e2bf82f539fd2993d79eb1fd5336a7d42e7f
 - name: github.com/aws/aws-sdk-go
-  version: 3d7773ac930d57ef4a59e0d10c5f65a0cfa5acd6
+  version: 4edf620820296243715aba8774dcc76f26d1e3e5
   subpackages:
   - aws
   - aws/awserr
@@ -50,7 +50,7 @@ imports:
 - name: github.com/hashicorp/go-multierror
   version: ed905158d87462226a13fe39ddf685ea65f1c11f
 - name: github.com/hashicorp/go-plugin
-  version: 8cf118f7a2f0c7ef1c82f66d4f6ac77c7e27dc12
+  version: f72692aebca2008343a9deb06ddb4b17f7051c15
 - name: github.com/hashicorp/go-uuid
   version: 64130c7a86d732268a38cb04cfbaf0cc987fda98
 - name: github.com/hashicorp/go-version

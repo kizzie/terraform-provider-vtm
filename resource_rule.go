@@ -26,6 +26,11 @@ func resourceRule() *schema.Resource {
 				Type:     schema.TypeString,
 				Required: true,
 			},
+			"note": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Removed:  "Note has been removed. Notes should be saved in your rule with the header #=-",
+			},
 		},
 	}
 }
