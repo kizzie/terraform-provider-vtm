@@ -357,7 +357,9 @@ func resourcePoolSet(d *schema.ResourceData, meta interface{}) error {
 
 			VtmNode := &stingray.Node{}
 			VtmNode.Node = stingray.String(terraformNode["node"].(string))
-			VtmNode.Weight = stingray.Int(terraformNode["weight"].(int))
+                        if terraformNode["weight"].(int) != 0 {
+                                VtmNode.Weight = stingray.Int(terraformNode["weight"].(int))
+                        }
 			VtmNode.Priority = stingray.Int(terraformNode["priority"].(int))
 			VtmNode.State = stingray.String(terraformNode["state"].(string))
 
