@@ -209,6 +209,12 @@ func resourcePool() *schema.Resource {
 				Default:  false,
 			},
 
+			"ssl_encrypt": &schema.Schema{
+				Type:     schema.TypeBool,
+				Optional: true,
+				Default:  false,
+			},
+
 			"udp_accept_from": &schema.Schema{
 				Type:     schema.TypeString,
 				Optional: true,
@@ -276,6 +282,7 @@ func resourcePoolRead(d *schema.ResourceData, meta interface{}) error {
 	d.Set("udp_accept_from", string(*r.UDP.AcceptFrom))
 	d.Set("udp_accept_from_mask_class", string(*r.UDP.AcceptFromMask))
 	d.Set("transparent", bool(*r.Basic.Transparent))
+	d.Set("ssl_encrypt", bool(*r.SSL.Enable))
 
 	nodesList := make([]map[string]interface{}, 0, len(r.Basic.NodesTable))
 	for _, node := range r.Basic.NodesTable {
@@ -346,6 +353,7 @@ func resourcePoolSet(d *schema.ResourceData, meta interface{}) error {
 	setString(&r.Basic.PersistenceClass, d, "persistence_class")
 	setBool(&r.TCP.Nagle, d, "tcp_nagle")
 	setBool(&r.Basic.Transparent, d, "transparent")
+	setBool(&r.SSL.Enable, d, "ssl_encrypt")
 	setString(&r.UDP.AcceptFrom, d, "udp_accept_from")
 	setString(&r.UDP.AcceptFromMask, d, "udp_accept_from_mask")
 
@@ -357,7 +365,9 @@ func resourcePoolSet(d *schema.ResourceData, meta interface{}) error {
 
 			VtmNode := &stingray.Node{}
 			VtmNode.Node = stingray.String(terraformNode["node"].(string))
-			VtmNode.Weight = stingray.Int(terraformNode["weight"].(int))
+                        if terraformNode["weight"].(int) != 0 {
+                                VtmNode.Weight = stingray.Int(terraformNode["weight"].(int))
+                        }
 			VtmNode.Priority = stingray.Int(terraformNode["priority"].(int))
 			VtmNode.State = stingray.String(terraformNode["state"].(string))
 
