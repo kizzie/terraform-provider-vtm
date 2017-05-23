@@ -2,9 +2,8 @@ package main
 
 import (
 	"fmt"
-
+	"github.com/atlassian/go-vtm"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/whitepages/go-stingray"
 )
 
 func resourceRule() *schema.Resource {
@@ -13,18 +12,24 @@ func resourceRule() *schema.Resource {
 		Read:   resourceRuleRead,
 		Update: resourceRuleUpdate,
 		Delete: resourceRuleDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
-			"content": &schema.Schema{
-				Type:      schema.TypeString,
-				Required:  true,
-				StateFunc: hashString,
-			},
-
 			"name": &schema.Schema{
 				Type:     schema.TypeString,
 				Required: true,
 				ForceNew: true,
+			},
+			"content": &schema.Schema{
+				Type:     schema.TypeString,
+				Required: true,
+			},
+			"note": &schema.Schema{
+				Type:     schema.TypeString,
+				Optional: true,
+				Removed:  "Note has been removed. Notes should be saved in your rule with the header #=-",
 			},
 		},
 	}
@@ -54,7 +59,7 @@ func resourceRuleRead(d *schema.ResourceData, meta interface{}) error {
 		return fmt.Errorf("Error reading resource: %s", err)
 	}
 
-	d.Set("content", hashString(string(r.Content)))
+	d.Set("content", r.String())
 
 	return nil
 }

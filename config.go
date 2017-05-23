@@ -4,7 +4,7 @@ import (
 	"crypto/tls"
 	"net/http"
 
-	"github.com/whitepages/go-stingray"
+	"github.com/atlassian/go-vtm"
 )
 
 // Config is the configuration structure used to instantiate the Stingray
@@ -16,6 +16,7 @@ type Config struct {
 	VerifySSL bool
 }
 
+//Client returns back a new client for the provider to use
 func (c *Config) Client() (*stingray.Client, error) {
 	client := newClient(c)
 

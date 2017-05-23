@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/atlassian/go-vtm"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/whitepages/go-stingray"
 )
 
 func resourceServiceLevelMonitor() *schema.Resource {
@@ -13,6 +13,9 @@ func resourceServiceLevelMonitor() *schema.Resource {
 		Read:   resourceServiceLevelMonitorRead,
 		Update: resourceServiceLevelMonitorUpdate,
 		Delete: resourceServiceLevelMonitorDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{

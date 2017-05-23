@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
+	"github.com/atlassian/go-vtm"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/whitepages/go-stingray"
 )
 
 func resourceRate() *schema.Resource {
@@ -13,6 +13,9 @@ func resourceRate() *schema.Resource {
 		Read:   resourceRateRead,
 		Update: resourceRateUpdate,
 		Delete: resourceRateDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{

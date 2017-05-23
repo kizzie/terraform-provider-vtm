@@ -1,10 +1,12 @@
 package main
 
 import (
+	"crypto/sha256"
+	"encoding/base64"
 	"fmt"
-
+	"github.com/atlassian/go-vtm"
 	"github.com/hashicorp/terraform/helper/schema"
-	"github.com/whitepages/go-stingray"
+	"log"
 )
 
 func resourceSSLServerKey() *schema.Resource {
@@ -13,6 +15,9 @@ func resourceSSLServerKey() *schema.Resource {
 		Read:   resourceSSLServerKeyRead,
 		Update: resourceSSLServerKeyUpdate,
 		Delete: resourceSSLServerKeyDelete,
+		Importer: &schema.ResourceImporter{
+			State: schema.ImportStatePassthrough,
+		},
 
 		Schema: map[string]*schema.Schema{
 			"name": &schema.Schema{
@@ -28,9 +33,10 @@ func resourceSSLServerKey() *schema.Resource {
 			},
 
 			"private": &schema.Schema{
-				Type:     schema.TypeString,
-				Optional: true,
-				Computed: true,
+				Type:             schema.TypeString,
+				Optional:         true,
+				Computed:         true,
+				DiffSuppressFunc: diffCurrentAndRemoteSSLKey,
 			},
 
 			"public": &schema.Schema{
@@ -48,6 +54,13 @@ func resourceSSLServerKey() *schema.Resource {
 	}
 }
 
+func diffCurrentAndRemoteSSLKey(k, old, new string, d *schema.ResourceData) bool {
+	shaOfContent := sha256.Sum256([]byte(new))
+	base64Content := base64.StdEncoding.EncodeToString(shaOfContent[:])
+	log.Printf("[DEBUG] [%s] %s == %s is %v", d.Id(), base64Content, old, base64Content == old)
+	return base64Content == old
+}
+
 func resourceSSLServerKeyCreate(d *schema.ResourceData, meta interface{}) error {
 	err := resourceSSLServerKeySet(d, meta)
 	if err != nil {
@@ -60,7 +73,7 @@ func resourceSSLServerKeyCreate(d *schema.ResourceData, meta interface{}) error 
 func resourceSSLServerKeyRead(d *schema.ResourceData, meta interface{}) error {
 	c := meta.(*providerConfig).client
 
-	r, resp, err := c.GetSSLServerKey(d.Get("name").(string))
+	r, resp, err := c.GetSSLServerKey(d.Id())
 	if err != nil {
 		if resp != nil && resp.StatusCode == 404 {
 			// The resource doesn't exist anymore
@@ -70,6 +83,10 @@ func resourceSSLServerKeyRead(d *schema.ResourceData, meta interface{}) error {
 		}
 
 		return fmt.Errorf("Error reading resource: %s", err)
+	}
+
+	if d.Get("name") == nil {
+		d.Set("name", d.Id())
 	}
 
 	d.Set("note", string(*r.Basic.Note))

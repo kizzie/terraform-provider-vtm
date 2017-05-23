@@ -1,0 +1,11 @@
+package: github.com/atlassian/terraform-provider-vtm
+import:
+- package: github.com/atlassian/go-vtm
+  version: master
+- package: github.com/hashicorp/terraform
+  version: v0.8.2
+  subpackages:
+  - helper/hashcode
+  - helper/schema
+  - plugin
+  - terraform
